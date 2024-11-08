@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Headers, Post, UnauthorizedException } from "@nestjs/common";
+import { Body, Controller, Get, Headers, Param, Patch, Post, UnauthorizedException } from "@nestjs/common";
 import { AuthService } from "../services/auth.service";
 import { UserEntity } from "../entities/user.entity";
 import { UserDocument } from "../schemas/user.schema";
@@ -18,9 +18,10 @@ export class AuthController {
     }
   ): Promise<UserDocument> {
     const userEntity = new UserEntity(
-      body.name,
+      
       body.email,
       body.password,
+      body.name,
       body.phone
     );
 
@@ -45,6 +46,13 @@ export class AuthController {
 
     const token = authorization.split(' ')[1];
     return this.authService.verifyToken(token);
+  }
+
+  @Patch('add_friend')
+  async addFriends(
+    @Body() body:{accepterId:string,acceptedId:string}
+  ):Promise<{msg:string}>{
+     return this.authService.addFriends(body);
   }
 
   
