@@ -52,4 +52,26 @@ export class AuthImplementation implements AuthInterface {
           throw new UnauthorizedException('Token validation failed');
         }
       }
+
+      async addFriends(body: { accepterId: string; acceptedId: string }): Promise<{ msg: string }> {
+        const { accepterId, acceptedId } = body;
+    
+        try {
+            await this.userModel.findByIdAndUpdate(
+                accepterId,
+                { $addToSet: { friends: acceptedId } }, 
+                { new: true } 
+            );
+    
+            await this.userModel.findByIdAndUpdate(
+                acceptedId,
+                { $addToSet: { friends: accepterId } },
+                { new: true }
+            );
+    
+            return { msg: 'Friends added successfully' };
+        } catch (error) {
+            throw new Error(`Error adding friends: ${error.message}`);
+        }
+    }
 }
