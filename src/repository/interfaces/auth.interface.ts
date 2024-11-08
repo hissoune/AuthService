@@ -6,8 +6,9 @@ export interface AuthInterface {
 
 
     login(user: UserEntity): Promise< {token: string} >;
-    
+
     addFriends(body): Promise< {msg: string} >;
+    removeFriends(body): Promise< {msg: string} >;
 
     
 }
