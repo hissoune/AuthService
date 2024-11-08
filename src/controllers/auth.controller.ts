@@ -55,5 +55,12 @@ export class AuthController {
      return this.authService.addFriends(body);
   }
 
+  @Patch('remove_friend')
+  async removeFriends(
+    @Body() body:{blockerId:string,blockedId:string}
+  ):Promise<{msg:string}>{
+     return this.authService.removeFriends(body);
+  }
+
   
 }
