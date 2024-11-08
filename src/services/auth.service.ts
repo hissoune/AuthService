@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Body } from '@nestjs/common';
 import { AuthImplementation } from '../repository/implementations/auth.implementation';
 import { UserEntity } from '../entities/user.entity';
 import { UserDocument } from '../schemas/user.schema';
@@ -22,5 +22,10 @@ export class AuthService {
   } catch (error) {
     throw new UnauthorizedException('Invalid or expired token');
   }
+}
+
+async addFriends(body:{ accepterId: string; acceptedId: string;}){
+  return this.authImplementation.addFriends(body)
+
 }
 }
