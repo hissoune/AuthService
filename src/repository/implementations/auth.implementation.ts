@@ -96,4 +96,26 @@ export class AuthImplementation implements AuthInterface {
             throw new Error(`Error removing friends: ${error.message}`);
         }
     }
+
+   async restoreFriends(body: any): Promise<{ msg: string; }> {
+        const { unblockerId, unblockedId } = body;
+    
+        try {
+            await this.userModel.findByIdAndUpdate(
+                unblockerId,
+                { $addToSet: { friends: unblockedId } }, 
+                { new: true } 
+            );
+    
+            await this.userModel.findByIdAndUpdate(
+                unblockedId,
+                { $addToSet: { friends: unblockerId } },
+                { new: true }
+            );
+    
+            return { msg: 'Friends unbolecked successfully' };
+        } catch (error) {
+            throw new Error(`Error removing friends: ${error.message}`);
+        }
+    }
 }
