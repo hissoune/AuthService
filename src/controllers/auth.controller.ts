@@ -61,6 +61,11 @@ export class AuthController {
   ):Promise<{msg:string}>{
      return this.authService.removeFriends(body);
   }
-
+  @Patch('restore_friend')
+  async restoreFriends(
+    @Body() body:{unblockerId:string,unblockedId:string}
+  ):Promise<{msg:string}>{
+     return this.authService.restoreFriends(body);
+  }
   
 }
