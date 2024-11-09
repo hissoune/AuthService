@@ -33,4 +33,8 @@ async removeFriends(body:{ blockerId: string; blockedId: string;}){
   return this.authImplementation.removeFriends(body)
 
 }
+
+async  restoreFriends(body:{ unblockerId: string; unblockedId: string;}){
+return this.authImplementation.restoreFriends(body);
+}
 }
