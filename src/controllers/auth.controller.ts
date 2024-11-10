@@ -48,24 +48,6 @@ export class AuthController {
     return this.authService.verifyToken(token);
   }
 
-  @Patch('add_friend')
-  async addFriends(
-    @Body() body:{accepterId:string,acceptedId:string}
-  ):Promise<{msg:string}>{
-     return this.authService.addFriends(body);
-  }
-
-  @Patch('remove_friend')
-  async removeFriends(
-    @Body() body:{blockerId:string,blockedId:string}
-  ):Promise<{msg:string}>{
-     return this.authService.removeFriends(body);
-  }
-  @Patch('restore_friend')
-  async restoreFriends(
-    @Body() body:{unblockerId:string,unblockedId:string}
-  ):Promise<{msg:string}>{
-     return this.authService.restoreFriends(body);
-  }
+  
   
 }
