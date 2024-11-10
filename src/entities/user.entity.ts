@@ -5,6 +5,5 @@ export class UserEntity {
         public password: string,
         public readonly name?: string,
         public readonly phone?: number,
-        public readonly  friends?:string[]
     ) {}
 }
