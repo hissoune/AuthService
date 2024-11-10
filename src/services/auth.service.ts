@@ -24,17 +24,5 @@ export class AuthService {
   }
 }
 
-async addFriends(body:{ accepterId: string; acceptedId: string;}){
-  return this.authImplementation.addFriends(body)
 
-}
-
-async removeFriends(body:{ blockerId: string; blockedId: string;}){
-  return this.authImplementation.removeFriends(body)
-
-}
-
-async  restoreFriends(body:{ unblockerId: string; unblockedId: string;}){
-return this.authImplementation.restoreFriends(body);
-}
 }
