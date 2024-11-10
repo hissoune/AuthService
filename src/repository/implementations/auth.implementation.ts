@@ -16,7 +16,14 @@ export class AuthImplementation implements AuthInterface {
     async register(userEntity: UserEntity): Promise<UserDocument> {
         const saltRounds = 10;
         userEntity.password = await bcrypt.hash(userEntity.password, saltRounds);
-        const createdUser = new this.userModel(userEntity);
+        const createdUser = new this.userModel(
+           {
+            email: userEntity.email,
+            password: userEntity.password,
+            name: userEntity.name,
+            phone: userEntity.phone,
+           }
+        );
         return createdUser.save();
     }
 
@@ -53,69 +60,5 @@ export class AuthImplementation implements AuthInterface {
         }
       }
 
-      async addFriends(body: { accepterId: string; acceptedId: string }): Promise<{ msg: string }> {
-        const { accepterId, acceptedId } = body;
-    
-        try {
-            await this.userModel.findByIdAndUpdate(
-                accepterId,
-                { $addToSet: { friends: acceptedId } }, 
-                { new: true } 
-            );
-    
-            await this.userModel.findByIdAndUpdate(
-                acceptedId,
-                { $addToSet: { friends: accepterId } },
-                { new: true }
-            );
-    
-            return { msg: 'Friends added successfully' };
-        } catch (error) {
-            throw new Error(`Error adding friends: ${error.message}`);
-        }
-    }
-
-    async removeFriends(body: any): Promise<{ msg: string }> {
-        const { blockerId, blockedId } = body;
-    
-        try {
-            await this.userModel.findByIdAndUpdate(
-                blockerId,
-                { $pull: { friends: blockedId } }, 
-                { new: true } 
-            );
-    
-            await this.userModel.findByIdAndUpdate(
-                blockedId,
-                { $pull: { friends: blockerId } },
-                { new: true }
-            );
-    
-            return { msg: 'Friends removed successfully' };
-        } catch (error) {
-            throw new Error(`Error removing friends: ${error.message}`);
-        }
-    }
-
-   async restoreFriends(body: any): Promise<{ msg: string; }> {
-        const { unblockerId, unblockedId } = body;
-    
-        try {
-            await this.userModel.findByIdAndUpdate(
-                unblockerId,
-                { $addToSet: { friends: unblockedId } }, 
-                { new: true } 
-            );
-    
-            await this.userModel.findByIdAndUpdate(
-                unblockedId,
-                { $addToSet: { friends: unblockerId } },
-                { new: true }
-            );
-    
-            return { msg: 'Friends unbolecked successfully' };
-        } catch (error) {
-            throw new Error(`Error removing friends: ${error.message}`);
-        }
-    }
+     
 }
