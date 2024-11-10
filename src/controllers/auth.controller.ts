@@ -39,7 +39,7 @@ export class AuthController {
   @Get('verify')
   async verifyToken(
     @Headers('authorization') authorization: string
-  ): Promise<UserDocument> {
+  ): Promise<{email:string}> {
     if (!authorization) {
       throw new UnauthorizedException('No token provided');
     }
