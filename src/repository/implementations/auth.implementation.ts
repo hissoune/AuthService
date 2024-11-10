@@ -34,16 +34,16 @@ export class AuthImplementation implements AuthInterface {
         const user = await this.userModel.findOne({ email: userEntity.email });
     if (!user) {
 
-        throw new Error('Invalid credentials');
+        throw new UnauthorizedException('Invalid credentials');
       }
     const isPasswordValid = await bcrypt.compare(userEntity.password, user.password); 
 
     if (!isPasswordValid) {
 
-        throw new Error('Invalid credentials');
+        throw new UnauthorizedException('Invalid credentials');
     }
        
-    const token = this.jwtService.sign({ id: user._id, email: user.email });
+    const token = this.jwtService.sign({ name: user.name, email: user.email });
 
 
    return {token} ;
@@ -54,7 +54,7 @@ export class AuthImplementation implements AuthInterface {
           const decoded = this.jwtService.verify(token); 
           const user = await this.userModel.findById(decoded.id); 
           if (!user) throw new UnauthorizedException('User not found');
-          return user;
+          return { email: user.email };
         } catch (error) {
           throw new UnauthorizedException('Token validation failed');
         }
