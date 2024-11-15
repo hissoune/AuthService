@@ -45,6 +45,7 @@ export class AuthController {
     }
 
     const token = authorization.split(' ')[1];
+    
     return this.authService.verifyToken(token);
   }
 
