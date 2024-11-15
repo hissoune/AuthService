@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Headers, Param, Patch, Post, UnauthorizedException } from "@nestjs/common";
+import { Body, Controller, Get, Headers, Param, Patch, Post, UnauthorizedException, BadRequestException } from "@nestjs/common";
 import { AuthService } from "../services/auth.service";
 import { UserEntity } from "../entities/user.entity";
 import { UserDocument } from "../schemas/user.schema";
@@ -10,7 +10,7 @@ export class AuthController {
   @Post("register")
   async register(
     @Body()
-    body: {
+      body: {
       name: string;
       email: string;
       password: string;
@@ -18,7 +18,6 @@ export class AuthController {
     }
   ): Promise<UserDocument> {
     const userEntity = new UserEntity(
-      
       body.email,
       body.password,
       body.name,
@@ -31,17 +30,17 @@ export class AuthController {
   @Post("login")
   async login(
     @Body() body: { email: string; password: string }
-  ): Promise<{token:string}> {
+  ): Promise<{ token: string }> {
     const userEntity = new UserEntity(body.email, body.password);
-    return this.authService.login(userEntity)
+    return this.authService.login(userEntity);
   }
 
-  @Get('verify')
+  @Get("verify")
   async verifyToken(
-    @Headers('authorization') authorization: string
-  ): Promise<{email:string}> {
+    @Headers("authorization") authorization: string
+  ): Promise<{ email: string }> {
     if (!authorization) {
-      throw new UnauthorizedException('No token provided');
+      throw new UnauthorizedException("No token provided");
     }
 
     const token = authorization.split(' ')[1];
@@ -49,6 +48,21 @@ export class AuthController {
     return this.authService.verifyToken(token);
   }
 
-  
-  
+  @Post("forgot-password")
+  async forgotPassword(
+    @Body("email") email: string
+  ): Promise<{ email: string }> {
+    return this.authService.forgotPassword(email);
+  }
+
+  @Patch("reset-password")
+  async resetPassword(
+    @Body() body: { resetToken: string; newPassword: string }
+  ): Promise<{ message: string }> {
+    const { resetToken, newPassword } = body;
+    if (!resetToken || !newPassword) {
+      throw new BadRequestException("Reset token and new password are required");
+    }
+    return this.authService.resetPassword(resetToken, newPassword);
+  }
 }
