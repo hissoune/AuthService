@@ -51,9 +51,14 @@ export class AuthImplementation implements AuthInterface {
 
     async verifyToken(token: string) {
         try {
+            
           const decoded = this.jwtService.verify(token); 
-          const user = await this.userModel.findById(decoded.id); 
+          
+          const user = await this.userModel.findOne({email:decoded.email}); 
+        
+
           if (!user) throw new UnauthorizedException('User not found');
+          
           return { email: user.email };
         } catch (error) {
           throw new UnauthorizedException('Token validation failed');
